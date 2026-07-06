@@ -17,6 +17,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
   const [error, setError] = useState('');
   const [shake, setShake] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleInputChange = (index: number, value: string) => {
     if (value.length > 1) {
@@ -39,6 +40,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
       inputRefs.current[index - 1]?.focus();
     }
     if (e.key === 'Enter') {
+      e.preventDefault();
       handleSubmit(e);
     }
   };
@@ -60,7 +62,12 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const fullCode = code.join('');
-    if (fullCode.length !== 6) return;
+    if (fullCode.length !== 6) {
+      setError('Please enter all 6 digits');
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
+      return;
+    }
 
     setLoading(true);
     setError('');
@@ -120,7 +127,6 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
   const fullCode = code.join('');
   const isComplete = fullCode.length === 6;
 
-  // Get the display value for each input (show ● when filled)
   const getDisplayValue = (digit: string) => {
     return digit ? '●' : '';
   };
@@ -241,7 +247,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <div className="flex items-center justify-between mb-3">
                       <label className="text-sm font-semibold text-slate-700">
@@ -252,7 +258,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                       </span>
                     </div>
 
-                    {/* 6 Individual Input Fields - Left to Right */}
+                    {/* 6 Individual Input Fields */}
                     <motion.div
                       animate={shake ? { x: [-12, 12, -8, 8, -4, 4, 0] } : {}}
                       transition={{ duration: 0.5 }}
@@ -348,7 +354,11 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: LoginModalPro
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       type="submit"
-                      disabled={loading || !isComplete}
+                      disabled={loading}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleSubmit(e);
+                      }}
                       className="group relative flex-1 overflow-hidden rounded-2xl bg-gradient-to-br from-[#0B6B3A] to-[#1a8a4a] px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-[#0B6B3A]/30 transition-all hover:shadow-xl hover:shadow-[#0B6B3A]/40 disabled:opacity-50 disabled:hover:shadow-lg"
                     >
                       {loading ? (
