@@ -53,7 +53,7 @@ function AmbientBackground() {
 interface StatCardConfig {
   label: string;
   value: number | string;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: any;
   gradient: string;
   change: string;
   up: boolean;
@@ -144,7 +144,7 @@ interface ChartConfig {
   };
   centerText: string | number;
   centerSub: string;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: any;
   gradient: string;
   glowColor: string;
   legend: { color: string; label: string; value: number }[];
@@ -417,7 +417,7 @@ function ParticipantTable({ participants, loading, lang, onRefresh }: Participan
           </thead>
           <tbody className="divide-y divide-slate-100">
             {filtered.slice(0, 5).map((participant) => (
-              <tr key={participant._id} className="transition-colors hover:bg-slate-50/70">
+              <tr key={String(participant._id)} className="transition-colors hover:bg-slate-50/70">
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-green-100 to-green-100 text-sm font-semibold text-green-900 shadow-md shadow-emerald-500/15">

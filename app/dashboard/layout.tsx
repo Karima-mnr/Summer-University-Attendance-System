@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuthStore } from '@/app/lib/store/auth.store';
 import { Sidebar } from './components/Sidebar';
@@ -8,7 +8,8 @@ import { LANGUAGES } from '@/app/lib/constants';
 import { Menu, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/app/lib/utils';
 
-export default function DashboardLayout({
+// Component that uses useSearchParams - must be wrapped in Suspense
+function DashboardLayoutContent({
   children,
 }: {
   children: React.ReactNode;
@@ -82,5 +83,18 @@ export default function DashboardLayout({
         </main>
       </div>
     </div>
+  );
+}
+
+// Main layout export - wraps everything in Suspense
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-lg">Loading...</div>}>
+      <DashboardLayoutContent>{children}</DashboardLayoutContent>
+    </Suspense>
   );
 }

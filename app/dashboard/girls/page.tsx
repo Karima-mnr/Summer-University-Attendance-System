@@ -208,7 +208,7 @@ export default function GirlsPage() {
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredParticipants.map((participant) => (
-                <tr key={participant._id} className="transition-colors hover:bg-slate-50/70">
+                <tr key={String(participant._id)} className="transition-colors hover:bg-slate-50/70">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#dfb9bc] to-[#dfb9bc] text-sm font-semibold text-red-900 shadow-md shadow-rose-500/15">
@@ -305,7 +305,7 @@ export default function GirlsPage() {
           lang={lang}
           onSuccess={handleSuccess}
           onCancel={handleCloseModal}
-          initialData={editingParticipant || undefined}
+          initialData={editingParticipant ? { ...editingParticipant, _id: editingParticipant._id.toString() } : undefined}
         />
       </Modal>
     </div>
